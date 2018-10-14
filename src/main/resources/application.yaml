@@ -1,0 +1,13 @@
+spring:
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.jdbc.lob.non_contextual_creation: true
+
+#Rental price configuration
+video-store:
+  basicPrice: 30
+  premiumPrice: 40
+
