@@ -25,13 +25,15 @@ public class RentalFacade {
         this.customerFacade = customerFacade;
     }
 
+    @Transactional(readOnly = true)
     public List<RentalDto> findRentalsByCustomerId(Long customerId, boolean onlyActive) {
         return rentalSearch.findRentalsByCustomerIdAndRentalStatus(customerId, onlyActive).stream()
                 .map(Rental::toDto)
                 .collect(Collectors.toList());
     }
 
-    BigDecimal calculateRentalPrice(RentalPriceCalculateCommand rentalPriceCalculateCommand) {
+    @Transactional(readOnly = true)
+    public BigDecimal calculateRentalPrice(RentalPriceCalculateCommand rentalPriceCalculateCommand) {
         return rentalCreator.calculateRentalPrice(rentalPriceCalculateCommand);
     }
 
@@ -43,14 +45,14 @@ public class RentalFacade {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
+    public RentalDto returnFilm(ReturnCommand returnCommand) {
+        return rentalReturner.returnFilm(returnCommand).toDto();
+    }
+
     private int getBonusPoints(List<RentalDto> rentals) {
         return rentals.stream()
                 .map(RentalDto::getFilmType)
                 .mapToInt(FilmType::getBonusPoints).sum();
-    }
-
-    public RentalDto returnFilm(ReturnCommand returnCommand) {
-        return rentalReturner.returnFilm(returnCommand).toDto();
     }
 
 }

@@ -33,6 +33,10 @@ class Film extends BaseEntity {
     }
 
     public FilmDto toDto() {
-        return new FilmDto(this.getId(), this.getTitle(), this.getType());
+        return FilmDto.builder()
+                .id(id)
+                .title(title)
+                .filmType(type)
+                .build();
     }
 }

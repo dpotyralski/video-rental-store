@@ -1,8 +1,6 @@
 package pl.dpotyralski.videorentalstore.rental;
 
 
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import pl.dpotyralski.videorentalstore.film.FilmDto;
 import pl.dpotyralski.videorentalstore.film.FilmFacade;
 import pl.dpotyralski.videorentalstore.infrastructure.TimeProvider;
@@ -17,7 +15,6 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toSet;
 
-@Transactional
 class RentalCreator {
 
     private final FilmFacade filmFacade;
@@ -33,7 +30,6 @@ class RentalCreator {
         this.timeProvider = timeProvider;
     }
 
-    @Transactional(readOnly = true)
     BigDecimal calculateRentalPrice(RentalPriceCalculateCommand rentalPriceCalculateCommand) {
         List<FilmDto> films = filmFacade.findAllByIds(getFilmIds(rentalPriceCalculateCommand.getDetails()));
         Map<Long, RentalDetail> filmsWithRentalDetails = transformToFilmWithRentalDetailsMap(rentalPriceCalculateCommand.getDetails());
@@ -44,7 +40,6 @@ class RentalCreator {
         }).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     List<RentalDto> rent(RentalCommand rentalCommand) {
         Long customerId = rentalCommand.getCustomerId();
         List<FilmDto> films = filmFacade.findAllByIds(getFilmIds(rentalCommand.getFilmDetails()));
@@ -54,9 +49,12 @@ class RentalCreator {
                 .map(film -> createRental(customerId, film, filmsWithRentalDetails.get(film.getId()).getDays()))
                 .collect(toSet());
 
-        return rentalRepository.saveAll(rentals).stream()
+        List<RentalDto> result = rentalRepository.saveAll(rentals).stream()
                 .map(Rental::toDto)
                 .collect(toList());
+
+        rentalRepository.flush();
+        return result;
     }
 
     private Rental createRental(Long customerId, FilmDto filmDto, long days) {

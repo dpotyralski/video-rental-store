@@ -1,5 +1,7 @@
 package pl.dpotyralski.videorentalstore.rental;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import pl.dpotyralski.videorentalstore.film.FilmType;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 
 @Getter
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class RentalDto {
 
     private Long id;

@@ -10,7 +10,6 @@ import javax.persistence.Table;
 
 @Entity
 @Getter
-
 @Table(name = "customers")
 class Customer extends BaseEntity {
 
@@ -31,9 +30,9 @@ class Customer extends BaseEntity {
 
     CustomerDto toDto() {
         return CustomerDto.builder()
-                .id(this.id)
-                .username(this.username)
-                .bonusPoints(this.bonusPoints)
+                .id(id)
+                .username(username)
+                .bonusPoints(bonusPoints)
                 .build();
     }
 

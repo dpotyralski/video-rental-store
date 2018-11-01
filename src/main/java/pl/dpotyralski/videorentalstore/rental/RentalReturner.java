@@ -1,6 +1,5 @@
 package pl.dpotyralski.videorentalstore.rental;
 
-import org.springframework.transaction.annotation.Transactional;
 import pl.dpotyralski.videorentalstore.infrastructure.TimeProvider;
 import pl.dpotyralski.videorentalstore.rental.exception.RentalNotFound;
 
@@ -16,7 +15,6 @@ class RentalReturner {
         this.timeProvider = timeProvider;
     }
 
-    @Transactional
     Rental returnFilm(ReturnCommand returnCommand) {
         Rental currentRental = rentalRepository.findById(returnCommand.getRentalId())
                 .orElseThrow(() -> new RentalNotFound(returnCommand.getRentalId()));

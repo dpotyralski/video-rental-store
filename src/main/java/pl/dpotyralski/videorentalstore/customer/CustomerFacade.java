@@ -1,5 +1,8 @@
 package pl.dpotyralski.videorentalstore.customer;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
 public class CustomerFacade {
 
     private final CustomerSearch customerSearch;
@@ -10,10 +13,7 @@ public class CustomerFacade {
         this.customerCreator = customerCreator;
     }
 
-    public CustomerDto saveCustomer(CreateCustomerCommand createCustomerCommand) {
-        return customerCreator.createCustomer(createCustomerCommand).toDto();
-    }
-
+    @Transactional(readOnly = true)
     public int getCustomerBonusPoints(Long id) {
         return customerSearch.getBonusPointsByCustomerId(id);
     }
@@ -21,6 +21,10 @@ public class CustomerFacade {
     public void addBonusPointsToCustomer(AddBonusPointsCommand addBonusPointsCommand) {
         customerSearch.getCustomerById(addBonusPointsCommand.getCustomerId())
                 .addBonusPoints(addBonusPointsCommand.getBonusPoints());
+    }
+
+    public CustomerDto saveCustomer(CreateCustomerCommand createCustomerCommand) {
+        return customerCreator.createCustomer(createCustomerCommand).toDto();
     }
 
 }

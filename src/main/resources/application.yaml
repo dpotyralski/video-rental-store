@@ -5,6 +5,7 @@ spring:
       ddl-auto: create
     properties:
       hibernate.jdbc.lob.non_contextual_creation: true
+    show-sql: true
 
 #Rental price configuration
 video-store:
