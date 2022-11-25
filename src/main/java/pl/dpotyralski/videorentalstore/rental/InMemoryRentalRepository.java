@@ -112,7 +112,6 @@ class InMemoryRentalRepository implements RentalRepository {
 
     @Override
     public void flush() {
-        throw new UnsupportedOperationException();
     }
 
     @Override
