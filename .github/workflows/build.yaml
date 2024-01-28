@@ -28,4 +28,4 @@ jobs:
           cache-read-only: ${{ github.ref != 'refs/heads/main' }}
 
       - name: Build and test the project
-        run: ./gradlew build
+        run: ./mvnw clean verify
